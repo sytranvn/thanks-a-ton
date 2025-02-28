@@ -3,6 +3,7 @@ import { TonConnectButton } from '@tonconnect/ui-react'
 import { useCounterContract } from './hooks/useThanksATonContract'
 import { useTonConnect } from './hooks/useTonConnect';
 import { ChangeEvent, useCallback, useState } from 'react';
+const network = import.meta.env.VITE_APP_NETWORK
 
 function App() {
   const { connected } = useTonConnect();
@@ -34,7 +35,7 @@ function App() {
         <TonConnectButton />
 
         <div className='Card Address' style={{ position: 'relative' }}>
-          <b>Send Thanks to Address {import.meta.env.VITE_APP_NETWORK === 'testnet' && '(testnet)'}</b>
+          <b>Send Thanks to Address {network === 'testnet' && '(testnet)'}</b>
           <pre className='Hint' onClick={copyAddress}>{address}</pre>
           <span className={`Copied ${!copied && 'Faded'}`}>Copied</span>
           <b>Current balance</b>

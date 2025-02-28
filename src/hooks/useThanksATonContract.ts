@@ -12,6 +12,8 @@ type Thank = {
   message: string
 }
 
+const address = import.meta.env.VITE_APP_CONTRACT_ADDRESS
+
 export function useCounterContract() {
   const client = useTonClient();
   const [val, setVal] = useState<null | number>();
@@ -22,7 +24,7 @@ export function useCounterContract() {
   const thanksATonContract = useAsyncInitialize(async () => {
     if (!client) return;
     const contract = ThanksATon.fromAddress(
-      Address.parse(import.meta.env.VITE_APP_CONTRACT_ADDRESS) // replace with your address from tutorial 2 step 8
+      Address.parse(address) // replace with your address from tutorial 2 step 8
     );
     return client.open(contract) as OpenedContract<ThanksATon>;
   }, [client]);
