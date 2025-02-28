@@ -62,7 +62,7 @@ export function useCounterContract(network: Network) {
     setThanks(donations);
   }, [thanksATonContract, setThanks, client])
 
-  useEffect(() => {
+  const getValue = useCallback(
     async function getValue() {
       if (!thanksATonContract) return;
       try {
@@ -74,7 +74,9 @@ export function useCounterContract(network: Network) {
         setVal(Number(val));
       }
     }
+    , [thanksATonContract, setVal]);
 
+  useEffect(() => {
     Promise.all([getValue(), getThanks()]);
   }, [thanksATonContract,]);
 
@@ -91,14 +93,14 @@ export function useCounterContract(network: Network) {
         });
         while (true) {
           const newState = await client?.getContractState(thanksATonContract?.address!)
-          if (state?.blockId.seqno !== newState?.blockId.seqno) {
+          if (state?.balance !== newState?.balance) {
+            await sleep(1500);
             break;
           }
-          await sleep(1500);
+          await sleep(2000);
         }
 
-        const val = await thanksATonContract?.getBalance();
-        setVal(Number(val));
+        await Promise.all([getValue(), getThanks()]);
       } catch (err) {
         console.error('Error:', err)
       }
