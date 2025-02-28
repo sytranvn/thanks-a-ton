@@ -15,7 +15,6 @@ type Thank = {
 export function useCounterContract() {
   const client = useTonClient();
   const [val, setVal] = useState<null | number>();
-  const [isOwner, setIsOwner] = useState<boolean>(false);
   const { sender } = useTonConnect();
 
   const [thanks, setThanks] = useState<Thank[]>([]);
@@ -23,7 +22,7 @@ export function useCounterContract() {
   const thanksATonContract = useAsyncInitialize(async () => {
     if (!client) return;
     const contract = ThanksATon.fromAddress(
-      Address.parse('EQB3eoFOxFl6smzvdCdltuIGnYz3Segp5UZVSqZ6S0GZbACy') // replace with your address from tutorial 2 step 8
+      Address.parse(import.meta.env.VITE_APP_CONTRACT_ADDRESS) // replace with your address from tutorial 2 step 8
     );
     return client.open(contract) as OpenedContract<ThanksATon>;
   }, [client]);
@@ -61,19 +60,13 @@ export function useCounterContract() {
       const val = await thanksATonContract.getBalance();
       setVal(Number(val));
     }
-    async function getIsOwner() {
-      if (!thanksATonContract) return false;
-      const isOwner = await thanksATonContract.getIsOwner(sender.address!);
-      setIsOwner(isOwner)
-    }
 
-    Promise.all([getValue(), getIsOwner(), getThanks()]);
+    Promise.all([getValue(), getThanks()]);
   }, [thanksATonContract]);
 
   return {
     value: val,
     address: thanksATonContract?.address.toString(),
-    isOwner,
     thanks,
     sendThanks: async (amount: number, message: string) => {
       const state = await client?.getContractState(thanksATonContract?.address!)

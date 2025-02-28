@@ -6,7 +6,7 @@ import { ChangeEvent, useCallback, useState } from 'react';
 
 function App() {
   const { connected } = useTonConnect();
-  const { value, isOwner, address, sendThanks, thanks } = useCounterContract();
+  const { value, address, sendThanks, thanks } = useCounterContract();
   const [copied, setCopied] = useState(false);
   const [amount, setAmount] = useState(1);
   const [message, setMessage] = useState('');

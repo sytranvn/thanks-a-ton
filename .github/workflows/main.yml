@@ -20,6 +20,7 @@ jobs:
           CI: true
           VITE_APP_TITLE: "Thanks a TON"
           VITE_APP_URL: "https://thanks-a-ton.sytranvn.dev"
+          VITE_APP_CONTRACT_ADDRESS: EQB3eoFOxFl6smzvdCdltuIGnYz3Segp5UZVSqZ6S0GZbACy
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
