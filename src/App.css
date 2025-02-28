@@ -2,6 +2,9 @@
   --tg-theme-bg-color: #ffffff;
   --tg-theme-button-bg-color: #0098EA;
   --tg-theme-button-text-color: #fff;
+  --tg-theme-button-color: #32a6fb;
+  --tg-theme-button-text-color: #fff;
+  --tg-theme-card-bg-color: #08f;
 }
 
 .App {
@@ -59,7 +62,7 @@
   width: 100%;
   padding: 10px 20px;
   border-radius: 10px;
-  background-color: #08f;
+  background-color: var(--tg-theme-card-bg-color);
   color: var(--tg-theme-text-color);
 }
 
@@ -87,10 +90,12 @@
     --tg-theme-text-color: #fff;
     --tg-theme-button-color: #32a6fb;
     --tg-theme-button-text-color: #fff;
+    --tg-theme-card-bg-color: #031d33;
   }
 
   .Card {
-    background-color: var(--tg-theme-bg-color);
+      background-color: var(--tg-theme-card-bg-color);
+
     filter: brightness(165%);
   }
   
