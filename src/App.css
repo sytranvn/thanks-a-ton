@@ -1,7 +1,7 @@
 :root {
   --tg-theme-bg-color: #ffffff;
-  --tg-theme-button-color: #63d0f9;
-  --tg-theme-button-text-color: black;
+  --tg-theme-button-bg-color: #0098EA;
+  --tg-theme-button-text-color: #fff;
 }
 
 .App {
@@ -52,7 +52,7 @@
 .Address pre {
   max-width: min-content;
   overflow-x: scroll;
-  background: white;
+  background: var(--tg-theme-bg-color);
 }
 
 .Card {
@@ -60,7 +60,7 @@
   padding: 10px 20px;
   border-radius: 10px;
   background-color: #08f;
-  color: #000;
+  color: var(--tg-theme-text-color);
 }
 
 .Thanks {
@@ -72,8 +72,13 @@
 .Send {
   background: var(--tg-theme-button-color);
   color: var(--tg-theme-button-text-color);
-  min-width: 90px;
-  min-height: 32px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.16);
+  padding: 8px 26px 8px 26px;
+  display: flex ;
+  align-items: center;
+  gap: 4px;
+  height: 40px;
+  border-radius: 20px;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -39,7 +39,6 @@ function App() {
           <span className={`Copied ${!copied && 'Faded'}`}>Copied</span>
           <b>Current balance</b>
           <div>{value ?? 'Loading...'}</div>
-
           <b>Received Thanks</b>
           <div>
             <ul className='Thanks'>{
