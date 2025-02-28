@@ -2,11 +2,12 @@ import { useCallback, useEffect, useState } from 'react';
 import { loadDonation, ThanksATon } from '../contracts/thanksATon';
 import { useTonClient } from './useTonClient';
 import { useAsyncInitialize } from './useAsyncInitialize';
-import { Address, OpenedContract, toNano } from '@ton/core';
+import { Address, toNano } from '@ton/core';
 import { useTonConnect } from './useTonConnect';
 import { sleep } from '../utils';
+import { type Network } from '@orbs-network/ton-access';
 
-type Thank = {
+export type ThankT = {
   hash: string;
   value: number;
   message: string
@@ -14,23 +15,23 @@ type Thank = {
 
 const address = import.meta.env.VITE_APP_CONTRACT_ADDRESS
 
-export function useCounterContract() {
-  const client = useTonClient();
+export function useCounterContract(network: Network) {
+  const client = useTonClient(network);
   const [val, setVal] = useState<null | number>();
   const { sender } = useTonConnect();
 
-  const [thanks, setThanks] = useState<Thank[]>([]);
+  const [thanks, setThanks] = useState<ThankT[]>([]);
 
   const thanksATonContract = useAsyncInitialize(async () => {
     if (!client) return;
     const contract = ThanksATon.fromAddress(
       Address.parse(address) // replace with your address from tutorial 2 step 8
     );
-    return client.open(contract) as OpenedContract<ThanksATon>;
+    return client.open(contract)  // as OpenedContract<ThanksATon>;
   }, [client]);
 
   const getThanks = useCallback(async () => {
-    const donations: Thank[] = []
+    const donations: ThankT[] = []
     if (!thanksATonContract) return donations;
     let transactions;
     try {
@@ -58,9 +59,8 @@ export function useCounterContract() {
       }
     }
 
-    console.log(donations)
     setThanks(donations);
-  }, [thanksATonContract])
+  }, [thanksATonContract, setThanks, client])
 
   useEffect(() => {
     async function getValue() {
@@ -76,7 +76,7 @@ export function useCounterContract() {
     }
 
     Promise.all([getValue(), getThanks()]);
-  }, [thanksATonContract]);
+  }, [thanksATonContract,]);
 
   return {
     value: val,
