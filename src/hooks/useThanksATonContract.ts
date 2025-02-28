@@ -30,7 +30,13 @@ export function useCounterContract() {
   const getThanks = useCallback(async () => {
     const donations: Thank[] = []
     if (!thanksATonContract) return donations;
-    const transactions = await client?.getTransactions(thanksATonContract.address!, { limit: 10 })
+    let transactions;
+    try {
+      transactions = await client?.getTransactions(thanksATonContract.address!, { limit: 10 })
+    } catch {
+      await sleep(3000);
+      transactions = await client?.getTransactions(thanksATonContract.address!, { limit: 10 })
+    }
 
     if (transactions) {
       for (const tx of transactions) {
@@ -57,8 +63,14 @@ export function useCounterContract() {
   useEffect(() => {
     async function getValue() {
       if (!thanksATonContract) return;
-      const val = await thanksATonContract.getBalance();
-      setVal(Number(val));
+      try {
+        const val = await thanksATonContract.getBalance();
+        setVal(Number(val));
+      } catch {
+        await sleep(3000);
+        const val = await thanksATonContract.getBalance();
+        setVal(Number(val));
+      }
     }
 
     Promise.all([getValue(), getThanks()]);
