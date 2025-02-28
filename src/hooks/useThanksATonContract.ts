@@ -41,7 +41,7 @@ export function useCounterContract() {
           try {
             const msg = loadDonation(body)
             donations.push({
-              hash: tx.hash.toString(),
+              hash: tx.hash().toString(),
               message: msg.message,
               value: Number(value * 100n / 1000000000n) / 100
             })
