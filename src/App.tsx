@@ -6,12 +6,13 @@ import { ChangeEvent, useCallback, useState } from 'react';
 import Card from './components/Card';
 import Thanks from './components/Thanks';
 import Info from './components/Info';
-const network = import.meta.env.VITE_APP_NETWORK
+import Address from './components/Address';
+import SendThanks from './components/SendThanks';
+import config from './config';
 
 function App() {
   const { connected } = useTonConnect();
-  const { value, address, sendThanks, thanks } = useCounterContract(network);
-  const [copied, setCopied] = useState(false);
+  const { value, sendThanks, thanks } = useCounterContract(config.network, config.address);
   const [amount, setAmount] = useState(1);
   const [message, setMessage] = useState('');
 
@@ -23,17 +24,7 @@ function App() {
   }, [setMessage])
   const send = useCallback(async () => {
     await sendThanks(amount, message);
-  }, [amount, message])
-
-  const copyAddress = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(address!);
-      setCopied(true);
-      setTimeout(() => { setCopied(false) }, 1000);
-    } catch (err) {
-      console.error("Please copy this address: " + address!)
-    }
-  }, [address])
+  }, [amount, message, sendThanks])
 
   return (
     <div className='App'>
@@ -42,9 +33,7 @@ function App() {
 
         <Card className='Address'>
           <Info>
-            <b>Send Thanks to Address {network === 'testnet' && '(testnet)'}</b>
-            <pre className='Hint' onClick={copyAddress}>{address}</pre>
-            <span className={`Copied ${!copied && 'Faded'}`}>Copied</span>
+            <Address address={config.address!} network={config.network} />
           </Info>
           <Info>
             <b>Received TON</b>
@@ -57,11 +46,7 @@ function App() {
         </Card>
 
         <Card>
-          <div><b>Send a thanks</b></div>
-          <label htmlFor="amount">Ton amount: </label>
-          <div><input id="amount" type="number" min={1} max={5} step={0.1} value={amount} onChange={changeAmount} /></div>
-          <label htmlFor="message">Message: </label>
-          <div><input id="message" type="text" maxLength={100} value={message} onChange={changeMessage} /></div>
+          <SendThanks amount={amount} message={message} changeAmount={changeAmount} changeMessage={changeMessage} />
         </Card>
 
         <button className='Send' disabled={!connected} onClick={send}>Send</button>

@@ -1,9 +1,10 @@
 import { useTonConnectUI } from '@tonconnect/ui-react';
 import { Sender, SenderArguments } from '@ton/core';
+import { useMemo } from 'react';
 
 export function useTonConnect(): { sender: Sender; connected: boolean } {
   const [tonConnectUI] = useTonConnectUI();
-  return {
+  const state = useMemo(() => ({
     sender: {
       send: async (args: SenderArguments) => {
         console.log('Begin send')
@@ -20,5 +21,6 @@ export function useTonConnect(): { sender: Sender; connected: boolean } {
       },
     },
     connected: tonConnectUI.connected,
-  };
+  }), [tonConnectUI]);
+  return state;
 }

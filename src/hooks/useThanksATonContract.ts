@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { loadDonation, ThanksATon } from '../contracts/thanksATon';
 import { useTonClient } from './useTonClient';
 import { useAsyncInitialize } from './useAsyncInitialize';
@@ -6,6 +6,7 @@ import { Address, toNano } from '@ton/core';
 import { useTonConnect } from './useTonConnect';
 import { sleep } from '../utils';
 import { type Network } from '@orbs-network/ton-access';
+import useRetry from './useRetry';
 
 export type ThankT = {
   hash: string;
@@ -13,16 +14,14 @@ export type ThankT = {
   message: string
 }
 
-const address = import.meta.env.VITE_APP_CONTRACT_ADDRESS
-
-export function useCounterContract(network: Network) {
+export function useCounterContract(network: Network, address: string) {
   const client = useTonClient(network);
   const [val, setVal] = useState<null | number>();
   const { sender } = useTonConnect();
 
   const [thanks, setThanks] = useState<ThankT[]>([]);
 
-  const thanksATonContract = useAsyncInitialize(async () => {
+  const thanksATonContract = useMemo(() => {
     if (!client) return;
     const contract = ThanksATon.fromAddress(
       Address.parse(address) // replace with your address from tutorial 2 step 8
@@ -30,17 +29,11 @@ export function useCounterContract(network: Network) {
     return client.open(contract)  // as OpenedContract<ThanksATon>;
   }, [client]);
 
-  const getThanks = useCallback(async () => {
+  const getThanks = useRetry(async () => {
     const donations: ThankT[] = []
     if (!thanksATonContract) return donations;
     let transactions;
-    try {
       transactions = await client?.getTransactions(thanksATonContract.address!, { limit: 10 })
-    } catch {
-      await sleep(3000);
-      transactions = await client?.getTransactions(thanksATonContract.address!, { limit: 10 })
-    }
-
     if (transactions) {
       for (const tx of transactions) {
         if (tx.inMessage?.info.type === 'internal') {
@@ -60,21 +53,15 @@ export function useCounterContract(network: Network) {
     }
 
     setThanks(donations);
-  }, [thanksATonContract, setThanks, client])
+  }, 3,[thanksATonContract, setThanks])
 
-  const getValue = useCallback(
+  const getValue = useRetry(
     async function getValue() {
       if (!thanksATonContract) return;
-      try {
-        const val = await thanksATonContract.getBalance();
-        setVal(Number(val));
-      } catch {
-        await sleep(3000);
-        const val = await thanksATonContract.getBalance();
-        setVal(Number(val));
-      }
+      const val = await thanksATonContract.getBalance();
+      setVal(Number(val));
     }
-    , [thanksATonContract, setVal]);
+    , 3,[thanksATonContract, setVal]);
 
   useEffect(() => {
     Promise.all([getValue(), getThanks()]);
