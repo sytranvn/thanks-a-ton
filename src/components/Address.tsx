@@ -14,14 +14,14 @@ function Address({ network, address }: Props) {
       setCopied(true);
       setTimeout(() => { setCopied(false) }, 1000);
     } catch (err) {
-      console.error("Please copy this address: " + address!)
+      console.error("Please copy this address: " + address!, err);
     }
   }, [address])
 
   return <>
-            <b>Send Thanks to Address {network === 'testnet' && '(testnet)'}</b>
-            <pre className='Hint' onClick={copyAddress}>{address}</pre>
-            <span className={`Copied ${!copied && 'Faded'}`}>Copied</span>
+    <b>Send Thanks to Address {network === 'testnet' && '(testnet)'}</b>
+    <pre className='Hint' onClick={copyAddress}>{address}</pre>
+    <span className={`Copied ${!copied && 'Faded'}`}>Copied</span>
   </>
 }
 

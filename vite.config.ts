@@ -1,11 +1,12 @@
-import { defineConfig, createLogger, UserConfig, ViteDevServer } from 'vite'
+import { defineConfig, createLogger, UserConfig, ViteDevServer, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import path from 'path'
 import fs from 'fs/promises'
 import { loadEnv } from 'vite'
 
-function generateManifest(config: UserConfig) {
+
+function generateManifest(config: UserConfig): Plugin {
   const env = loadEnv(config.mode!, process.cwd(), 'VITE_')
   const logger = createLogger()
   logger.info(config.mode!)
@@ -16,9 +17,9 @@ function generateManifest(config: UserConfig) {
   }
   return {
     name: 'generate-manifest',
-    async writeBundle(options: any) {
+    async writeBundle(options) {
       await fs.writeFile('log.log', config.mode!)
-      const outPath = path.resolve(options.dir, 'tonconnect-manifest.json')
+      const outPath = path.resolve(options.dir!, 'tonconnect-manifest.json')
       try {
         await fs.writeFile(outPath, JSON.stringify(data, null, 2), 'utf8');
       } catch (err) {

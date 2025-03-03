@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { sleep } from "../utils";
 
-export default function useRetry(func: Function, retries: number = 3, deps: any[]) {
+export default function useRetry<T>(func: () => T, retries: number = 3) {
   const retryable = useCallback(async () => {
     let count = 0;
     while (count < retries) {
@@ -22,6 +22,6 @@ export default function useRetry(func: Function, retries: number = 3, deps: any[
         }
       }
     }
-  }, [func, retries, ...deps])
+  }, [func, retries])
   return retryable;
 }

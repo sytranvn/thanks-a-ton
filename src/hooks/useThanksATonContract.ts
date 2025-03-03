@@ -17,7 +17,6 @@ export function useCounterContract(network: Network, address: string) {
   const client = useTonClient(network);
   const [val, setVal] = useState<null | number>();
   const { sender } = useTonConnect();
-
   const [thanks, setThanks] = useState<ThankT[]>([]);
 
   const thanksATonContract = useMemo(() => {
@@ -26,13 +25,12 @@ export function useCounterContract(network: Network, address: string) {
       Address.parse(address) // replace with your address from tutorial 2 step 8
     );
     return client.open(contract)  // as OpenedContract<ThanksATon>;
-  }, [client]);
+  }, [client, address]);
 
   const getThanks = useCallback(async () => {
     const donations: ThankT[] = []
     if (!thanksATonContract) return donations;
-    let transactions;
-    transactions = await client?.getTransactions(thanksATonContract.address!, { limit: 100 })
+    const transactions = await client?.getTransactions(thanksATonContract.address!, { limit: 100 })
     if (transactions) {
       for (const tx of transactions) {
         if (tx.inMessage?.info.type === 'internal') {
@@ -46,14 +44,16 @@ export function useCounterContract(network: Network, address: string) {
               message: msg.message,
               value: Number(value * 100n / 1000000000n) / 100
             })
-          } catch { }
+          } catch {
+            // noop
+          }
         }
       }
     }
 
     setThanks(donations);
-  }, [thanksATonContract, setThanks])
-  const getThanksRetry = useRetry(getThanks, 3, [])
+  }, [thanksATonContract, setThanks, client])
+  const getThanksRetry = useRetry(getThanks, 3)
 
   const getValue = useCallback(
     async function getValue() {
@@ -63,20 +63,21 @@ export function useCounterContract(network: Network, address: string) {
     }
     , [thanksATonContract, setVal]);
 
-  const getValueRetry = useRetry(getValue, 3, [])
+  const getValueRetry = useRetry(getValue, 3)
   useEffect(() => {
     getValueRetry().then(() => getThanksRetry())
   }, [getValueRetry, getThanksRetry]);
 
   const sendThanks = useCallback(async (amount: number, message: string) => {
-    const state = await client?.getContractState(thanksATonContract?.address!)
+    if (!thanksATonContract) return;
+    const state = await client?.getContractState(thanksATonContract.address)
     try {
       await thanksATonContract?.send(sender, { value: toNano(amount), bounce: true }, {
         $$type: 'Donation',
         message,
       });
       while (true) {
-        const newState = await client?.getContractState(thanksATonContract?.address!)
+        const newState = await client?.getContractState(thanksATonContract.address)
         if (state?.balance !== newState?.balance) {
           await sleep(1500);
           break;
@@ -88,7 +89,7 @@ export function useCounterContract(network: Network, address: string) {
     } catch (err) {
       console.error('Error:', err)
     }
-  }, [client, thanksATonContract, getValue, getThanks]
+  }, [client, sender, thanksATonContract, getValue, getThanks]
   );
 
   return {

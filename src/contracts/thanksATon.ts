@@ -23,16 +23,16 @@ export type StateInit = {
 
 export function storeStateInit(src: StateInit) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeRef(src.code);
         b_0.storeRef(src.data);
     };
 }
 
 export function loadStateInit(slice: Slice) {
-    let sc_0 = slice;
-    let _code = sc_0.loadRef();
-    let _data = sc_0.loadRef();
+    const sc_0 = slice;
+    const _code = sc_0.loadRef();
+    const _data = sc_0.loadRef();
     return { $$type: 'StateInit' as const, code: _code, data: _data };
 }
 
@@ -44,16 +44,16 @@ export type StdAddress = {
 
 export function storeStdAddress(src: StdAddress) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeInt(src.workchain, 8);
         b_0.storeUint(src.address, 256);
     };
 }
 
 export function loadStdAddress(slice: Slice) {
-    let sc_0 = slice;
-    let _workchain = sc_0.loadIntBig(8);
-    let _address = sc_0.loadUintBig(256);
+    const sc_0 = slice;
+    const _workchain = sc_0.loadIntBig(8);
+    const _address = sc_0.loadUintBig(256);
     return { $$type: 'StdAddress' as const, workchain: _workchain, address: _address };
 }
 
@@ -65,16 +65,16 @@ export type VarAddress = {
 
 export function storeVarAddress(src: VarAddress) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeInt(src.workchain, 32);
         b_0.storeRef(src.address.asCell());
     };
 }
 
 export function loadVarAddress(slice: Slice) {
-    let sc_0 = slice;
-    let _workchain = sc_0.loadIntBig(32);
-    let _address = sc_0.loadRef().asSlice();
+    const sc_0 = slice;
+    const _workchain = sc_0.loadIntBig(32);
+    const _address = sc_0.loadRef().asSlice();
     return { $$type: 'VarAddress' as const, workchain: _workchain, address: _address };
 }
 
@@ -88,7 +88,7 @@ export type Context = {
 
 export function storeContext(src: Context) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeBit(src.bounced);
         b_0.storeAddress(src.sender);
         b_0.storeInt(src.value, 257);
@@ -97,11 +97,11 @@ export function storeContext(src: Context) {
 }
 
 export function loadContext(slice: Slice) {
-    let sc_0 = slice;
-    let _bounced = sc_0.loadBit();
-    let _sender = sc_0.loadAddress();
-    let _value = sc_0.loadIntBig(257);
-    let _raw = sc_0.loadRef().asSlice();
+    const sc_0 = slice;
+    const _bounced = sc_0.loadBit();
+    const _sender = sc_0.loadAddress();
+    const _value = sc_0.loadIntBig(257);
+    const _raw = sc_0.loadRef().asSlice();
     return { $$type: 'Context' as const, bounced: _bounced, sender: _sender, value: _value, raw: _raw };
 }
 
@@ -118,7 +118,7 @@ export type SendParameters = {
 
 export function storeSendParameters(src: SendParameters) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeBit(src.bounce);
         b_0.storeAddress(src.to);
         b_0.storeInt(src.value, 257);
@@ -130,14 +130,14 @@ export function storeSendParameters(src: SendParameters) {
 }
 
 export function loadSendParameters(slice: Slice) {
-    let sc_0 = slice;
-    let _bounce = sc_0.loadBit();
-    let _to = sc_0.loadAddress();
-    let _value = sc_0.loadIntBig(257);
-    let _mode = sc_0.loadIntBig(257);
-    let _body = sc_0.loadBit() ? sc_0.loadRef() : null;
-    let _code = sc_0.loadBit() ? sc_0.loadRef() : null;
-    let _data = sc_0.loadBit() ? sc_0.loadRef() : null;
+    const sc_0 = slice;
+    const _bounce = sc_0.loadBit();
+    const _to = sc_0.loadAddress();
+    const _value = sc_0.loadIntBig(257);
+    const _mode = sc_0.loadIntBig(257);
+    const _body = sc_0.loadBit() ? sc_0.loadRef() : null;
+    const _code = sc_0.loadBit() ? sc_0.loadRef() : null;
+    const _data = sc_0.loadBit() ? sc_0.loadRef() : null;
     return { $$type: 'SendParameters' as const, bounce: _bounce, to: _to, value: _value, mode: _mode, body: _body, code: _code, data: _data };
 }
 
@@ -149,16 +149,16 @@ export type Deploy = {
 
 export function storeDeploy(src: Deploy) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(2490013878, 32);
         b_0.storeUint(src.queryId, 64);
     };
 }
 
 export function loadDeploy(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 2490013878) { throw Error('Invalid prefix'); }
-    let _queryId = sc_0.loadUintBig(64);
+    const _queryId = sc_0.loadUintBig(64);
     return { $$type: 'Deploy' as const, queryId: _queryId };
 }
 
@@ -169,16 +169,16 @@ export type DeployOk = {
 
 export function storeDeployOk(src: DeployOk) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(2952335191, 32);
         b_0.storeUint(src.queryId, 64);
     };
 }
 
 export function loadDeployOk(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 2952335191) { throw Error('Invalid prefix'); }
-    let _queryId = sc_0.loadUintBig(64);
+    const _queryId = sc_0.loadUintBig(64);
     return { $$type: 'DeployOk' as const, queryId: _queryId };
 }
 
@@ -190,7 +190,7 @@ export type FactoryDeploy = {
 
 export function storeFactoryDeploy(src: FactoryDeploy) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(1829761339, 32);
         b_0.storeUint(src.queryId, 64);
         b_0.storeAddress(src.cashback);
@@ -198,10 +198,10 @@ export function storeFactoryDeploy(src: FactoryDeploy) {
 }
 
 export function loadFactoryDeploy(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 1829761339) { throw Error('Invalid prefix'); }
-    let _queryId = sc_0.loadUintBig(64);
-    let _cashback = sc_0.loadAddress();
+    const _queryId = sc_0.loadUintBig(64);
+    const _cashback = sc_0.loadAddress();
     return { $$type: 'FactoryDeploy' as const, queryId: _queryId, cashback: _cashback };
 }
 
@@ -212,16 +212,16 @@ export type Withdraw = {
 
 export function storeWithdraw(src: Withdraw) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(195467089, 32);
         b_0.storeCoins(src.amount);
     };
 }
 
 export function loadWithdraw(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 195467089) { throw Error('Invalid prefix'); }
-    let _amount = sc_0.loadCoins();
+    const _amount = sc_0.loadCoins();
     return { $$type: 'Withdraw' as const, amount: _amount };
 }
 
@@ -232,16 +232,16 @@ export type Donation = {
 
 export function storeDonation(src: Donation) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeUint(1960884952, 32);
         b_0.storeStringRefTail(src.message);
     };
 }
 
 export function loadDonation(slice: Slice) {
-    let sc_0 = slice;
+    const sc_0 = slice;
     if (sc_0.loadUint(32) !== 1960884952) { throw Error('Invalid prefix'); }
-    let _message = sc_0.loadStringRefTail();
+    const _message = sc_0.loadStringRefTail();
     return { $$type: 'Donation' as const, message: _message };
 }
 
@@ -254,7 +254,7 @@ export type ThanksATon$Data = {
 
 export function storeThanksATon$Data(src: ThanksATon$Data) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeInt(src.MinTonReceive, 257);
         b_0.storeInt(src.MaxTonReceive, 257);
         b_0.storeAddress(src.deployer);
@@ -262,10 +262,10 @@ export function storeThanksATon$Data(src: ThanksATon$Data) {
 }
 
 export function loadThanksATon$Data(slice: Slice) {
-    let sc_0 = slice;
-    let _MinTonReceive = sc_0.loadIntBig(257);
-    let _MaxTonReceive = sc_0.loadIntBig(257);
-    let _deployer = sc_0.loadAddress();
+    const sc_0 = slice;
+    const _MinTonReceive = sc_0.loadIntBig(257);
+    const _MaxTonReceive = sc_0.loadIntBig(257);
+    const _deployer = sc_0.loadAddress();
     return { $$type: 'ThanksATon$Data' as const, MinTonReceive: _MinTonReceive, MaxTonReceive: _MaxTonReceive, deployer: _deployer };
 }
 
@@ -278,7 +278,7 @@ type ThanksATon_init_args = {
 
 function initThanksATon_init_args(src: ThanksATon_init_args) {
     return (builder: Builder) => {
-        let b_0 = builder;
+        const b_0 = builder;
         b_0.storeInt(src.minTon, 257);
         b_0.storeInt(src.maxTon, 257);
     };
@@ -287,7 +287,7 @@ function initThanksATon_init_args(src: ThanksATon_init_args) {
 async function ThanksATon_init(minTon: bigint, maxTon: bigint) {
     const __code = Cell.fromBase64('te6ccgECFQEABCQAART/APSkE/S88sgLAQIBYgIDAuzQAdDTAwFxsKMB+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiFRQUwNvBPhhAvhi2zxVEts88uCCyPhDAcx/AcoAVSBQI4EBAc8AgQEBzwABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiM8Wye1UEQQCASAMDQPW7aLt+wGSMH/gcCHXScIflTAg1wsf3iCCEHTguti6ji8w0x8BghB04LrYuvLggdQB0DEwggCf4fhBbyQTXwMkvvL0+EFvJBNfAyK78uX1f+AgghALppdRuuMCIIIQlGqYtrrjAsAAkTDjDXAFBgcBkjDTHwGCEAuml1G68uCB+gABMYE8lfhCUjDHBfL0+CdvEPhBbyQTXwOhggiYloChtgiCANVXIcIA8vT4Qn9YgEIQI21tbds8MH8KAVAw0x8BghCUapi2uvLggdM/ATHIAYIQr/kPV1jLH8s/yfhCAXBt2zx/CALY+QEggvBQkrXc4HFaV92Wn1+1pvkwJaCwLqsylHDKKzZcoNfpOrqOnjCBPJX4QlIgxwXy9PhCf3CBAIIQI21tbds8MH/bMeCC8L6yk1qCCJsVTTL5nEN3qpYKoRU2bMLGAnVeNrl/UFzsuuMCCgkBPG1tIm6zmVsgbvLQgG8iAZEy4hAkcAMEgEJQI9s8MAoBWoE8lfhCUiDHBfL0+EJ/+CdvEPhBbyQTXwOhggiYloChgEIQI21tbds8MH/bMQoByshxAcoBUAcBygBwAcoCUAUg10mBAQu68uCIINcLCiCBBP+68tCJgwm68uCIzxZQA/oCcAHKaCNus5F/kyRus+KXMzMBcAHKAOMNIW6znH8BygABIG7y0IABzJUxcAHKAOLJAfsICwCYfwHKAMhwAcoAcAHKACRus51/AcoABCBu8tCAUATMljQDcAHKAOIkbrOdfwHKAAQgbvLQgFAEzJY0A3ABygDicAHKAAJ/AcoAAslYzAJNvvAZBrpMCAhd15cEQQa4WFEECCf915aETBhN15cERtniqBbZ42GMEQ4CASAPEAAIUhDHBQIRuWwNs82zxsMYERIAEbgr7tRNDSAAGAGq7UTQ1AH4Y9IAAY4tgQEB1wCBAQHXAPpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhDMGwT4Pgo1wsKgwm68uCJgQEB1wCBAQHXAFkC0QHbPBMBDvgnbxB52zwUACj4QoIA5Lojwv/y9IIA5LoiwgDy9ADaIMEBIcJNsfLQhsgiwQCYgC0BywcCowLef3BvAASOGwR6qQwgwABSMLCzm3AzpjAUb4wEpAQDkTDiBOQBs5cCgC5vjAKk3o4QA3qpDKYwE2+MA6QiwAAQNOYzIqUDmlMSb4EBywcCpQLkbCHJ0A==');
     const __system = Cell.fromBase64('te6cckECFwEABC4AAQHAAQEFoWRdAgEU/wD0pBP0vPLICwMCAWIEDQLs0AHQ0wMBcbCjAfpAASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IhUUFMDbwT4YQL4Yts8VRLbPPLggsj4QwHMfwHKAFUgUCOBAQHPAIEBAc8AASDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFsntVBIFA9btou37AZIwf+BwIddJwh+VMCDXCx/eIIIQdOC62LqOLzDTHwGCEHTguti68uCB1AHQMTCCAJ/h+EFvJBNfAyS+8vT4QW8kE18DIrvy5fV/4CCCEAuml1G64wIgghCUapi2uuMCwACRMOMNcAYHCQGSMNMfAYIQC6aXUbry4IH6AAExgTyV+EJSMMcF8vT4J28Q+EFvJBNfA6GCCJiWgKG2CIIA1VchwgDy9PhCf1iAQhAjbW1t2zwwfwsBUDDTHwGCEJRqmLa68uCB0z8BMcgBghCv+Q9XWMsfyz/J+EIBcG3bPH8IATxtbSJus5lbIG7y0IBvIgGRMuIQJHADBIBCUCPbPDALAtj5ASCC8FCStdzgcVpX3ZafX7Wm+TAloLAuqzKUcMorNlyg1+k6uo6eMIE8lfhCUiDHBfL0+EJ/cIEAghAjbW1t2zwwf9sx4ILwvrKTWoIImxVNMvmcQ3eqlgqhFTZswsYCdV42uX9QXOy64wILCgFagTyV+EJSIMcF8vT4Qn/4J28Q+EFvJBNfA6GCCJiWgKGAQhAjbW1t2zwwf9sxCwHKyHEBygFQBwHKAHABygJQBSDXSYEBC7ry4Igg1wsKIIEE/7ry0ImDCbry4IjPFlAD+gJwAcpoI26zkX+TJG6z4pczMwFwAcoA4w0hbrOcfwHKAAEgbvLQgAHMlTFwAcoA4skB+wgMAJh/AcoAyHABygBwAcoAJG6znX8BygAEIG7y0IBQBMyWNANwAcoA4iRus51/AcoABCBu8tCAUATMljQDcAHKAOJwAcoAAn8BygACyVjMAgEgDhACTb7wGQa6TAgIXdeXBEEGuFhRBAgn/deWhEwYTdeXBEbZ4qgW2eNhjBIPAAhSEMcFAgEgERYCEblsDbPNs8bDGBIUAartRNDUAfhj0gABji2BAQHXAIEBAdcA+kABINdJgQELuvLgiCDXCwoggQT/uvLQiYMJuvLgiEMwbBPg+CjXCwqDCbry4ImBAQHXAIEBAdcAWQLRAds8EwAo+EKCAOS6I8L/8vSCAOS6IsIA8vQBDvgnbxB52zwVANogwQEhwk2x8tCGyCLBAJiALQHLBwKjAt5/cG8ABI4bBHqpDCDAAFIwsLObcDOmMBRvjASkBAORMOIE5AGzlwKALm+MAqTejhADeqkMpjATb4wDpCLAABA05jMipQOaUxJvgQHLBwKlAuRsIcnQABG4K+7UTQ0gABglyvoY');
-    let builder = beginCell();
+    const builder = beginCell();
     builder.storeRef(__system);
     builder.storeUint(0, 1);
     initThanksATon_init_args({ $$type: 'ThanksATon_init_args', minTon, maxTon })(builder);
@@ -426,17 +426,17 @@ export class ThanksATon implements Contract {
     }
     
     async getBalance(provider: ContractProvider) {
-        let builder = new TupleBuilder();
-        let source = (await provider.get('balance', builder.build())).stack;
-        let result = source.readString();
+        const builder = new TupleBuilder();
+        const source = (await provider.get('balance', builder.build())).stack;
+        const result = source.readString();
         return result;
     }
     
     async getIsOwner(provider: ContractProvider, sender: Address) {
-        let builder = new TupleBuilder();
+        const builder = new TupleBuilder();
         builder.writeAddress(sender);
-        let source = (await provider.get('isOwner', builder.build())).stack;
-        let result = source.readBoolean();
+        const source = (await provider.get('isOwner', builder.build())).stack;
+        const result = source.readBoolean();
         return result;
     }
     

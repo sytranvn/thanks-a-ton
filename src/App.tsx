@@ -2,7 +2,7 @@ import './App.css'
 import { TonConnectButton } from '@tonconnect/ui-react'
 import { useCounterContract } from './hooks/useThanksATonContract'
 import { useTonConnect } from './hooks/useTonConnect';
-import { ChangeEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useState } from 'react';
 import Card from './components/Card';
 import Thanks from './components/Thanks';
 import Info from './components/Info';
@@ -16,9 +16,6 @@ function App() {
   const [amount, setAmount] = useState(1);
   const [message, setMessage] = useState('');
 
-  useEffect(() => {
-    console.log(connected)
-  }, [connected])
   const changeAmount = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setAmount(+event.target.value)
   }, [setAmount])
