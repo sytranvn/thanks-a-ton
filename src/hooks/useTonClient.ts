@@ -7,7 +7,8 @@ export function useTonClient(network: Network) {
   const getEndpoint = useCallback(async function() {
     if (!network) return;
     return await getHttpEndpoint({ network })
-  }, [network]);
+  }, []);
+
   const endpoint = useAsyncInitialize(getEndpoint, [network]);
   return useAsyncInitialize(
     async () => {

@@ -20,7 +20,7 @@ export function useTonConnect(): { sender: Sender; connected: boolean } {
         });
       },
     },
-    connected: tonConnectUI.connected,
+    get connected() { return tonConnectUI.connected }
   }), [tonConnectUI]);
   return state;
 }

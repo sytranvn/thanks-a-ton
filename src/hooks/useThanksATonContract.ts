@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { loadDonation, ThanksATon } from '../contracts/thanksATon';
 import { useTonClient } from './useTonClient';
-import { useAsyncInitialize } from './useAsyncInitialize';
 import { Address, toNano } from '@ton/core';
 import { useTonConnect } from './useTonConnect';
 import { sleep } from '../utils';
@@ -29,11 +28,11 @@ export function useCounterContract(network: Network, address: string) {
     return client.open(contract)  // as OpenedContract<ThanksATon>;
   }, [client]);
 
-  const getThanks = useRetry(async () => {
+  const getThanks = useCallback(async () => {
     const donations: ThankT[] = []
     if (!thanksATonContract) return donations;
     let transactions;
-      transactions = await client?.getTransactions(thanksATonContract.address!, { limit: 10 })
+    transactions = await client?.getTransactions(thanksATonContract.address!, { limit: 100 })
     if (transactions) {
       for (const tx of transactions) {
         if (tx.inMessage?.info.type === 'internal') {
@@ -53,44 +52,49 @@ export function useCounterContract(network: Network, address: string) {
     }
 
     setThanks(donations);
-  }, 3,[thanksATonContract, setThanks])
+  }, [thanksATonContract, setThanks])
+  const getThanksRetry = useRetry(getThanks, 3, [])
 
-  const getValue = useRetry(
+  const getValue = useCallback(
     async function getValue() {
       if (!thanksATonContract) return;
       const val = await thanksATonContract.getBalance();
       setVal(Number(val));
     }
-    , 3,[thanksATonContract, setVal]);
+    , [thanksATonContract, setVal]);
 
+  const getValueRetry = useRetry(getValue, 3, [])
   useEffect(() => {
-    Promise.all([getValue(), getThanks()]);
-  }, [thanksATonContract,]);
+    getValueRetry().then(() => getThanksRetry())
+  }, [getValueRetry, getThanksRetry]);
+
+  const sendThanks = useCallback(async (amount: number, message: string) => {
+    const state = await client?.getContractState(thanksATonContract?.address!)
+    try {
+      await thanksATonContract?.send(sender, { value: toNano(amount), bounce: true }, {
+        $$type: 'Donation',
+        message,
+      });
+      while (true) {
+        const newState = await client?.getContractState(thanksATonContract?.address!)
+        if (state?.balance !== newState?.balance) {
+          await sleep(1500);
+          break;
+        }
+        await sleep(2000);
+      }
+
+      await Promise.all([getValue(), getThanks()]);
+    } catch (err) {
+      console.error('Error:', err)
+    }
+  }, [client, thanksATonContract, getValue, getThanks]
+  );
 
   return {
     value: val,
     address: thanksATonContract?.address.toString(),
     thanks,
-    sendThanks: async (amount: number, message: string) => {
-      const state = await client?.getContractState(thanksATonContract?.address!)
-      try {
-        await thanksATonContract?.send(sender, { value: toNano(amount), bounce: true }, {
-          $$type: 'Donation',
-          message,
-        });
-        while (true) {
-          const newState = await client?.getContractState(thanksATonContract?.address!)
-          if (state?.balance !== newState?.balance) {
-            await sleep(1500);
-            break;
-          }
-          await sleep(2000);
-        }
-
-        await Promise.all([getValue(), getThanks()]);
-      } catch (err) {
-        console.error('Error:', err)
-      }
-    },
+    sendThanks
   };
 }
